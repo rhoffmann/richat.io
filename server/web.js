@@ -4,16 +4,11 @@ var app = express();
 
 var port = process.env.PORT || 3000;
 
-
 app.use(express.static(__dirname + '/../public/dist'));
 
-console.log(__dirname+ '/../public/dist');
-
 var server = app.listen(port, function() {
-
   var host = server.address().address;
   var port = server.address().port;
 
   console.log('richat.io listening at %s:%s', host, port);
-
 });
