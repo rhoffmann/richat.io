@@ -1,24 +1,25 @@
 {
-  "name": "all-about-flux",
-  "version": "0.0.0",
-  "description": "Getting started with Flux",
+  "name": "richat.io",
+  "version": "0.0.1",
+  "description": "the best chat app for rich people",
   "main": "./",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rynclark/flux-getting-started.git"
+    "url": "https://github.com/rhoffmann/richat.io.git"
   },
   "keywords": [
-    "flux"
+    "flux",
+    "chat"
   ],
-  "author": "Ryan Clark",
+  "author": "Richard Hoffmann",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rynclark/flux-getting-started/issues"
+    "url": "https://github.com/rhoffmann/richat.io.git/issues"
   },
-  "homepage": "https://github.com/rynclark/flux-getting-started",
+  "homepage": "https://github.com/rhofmann/richat.io.git",
   "devDependencies": {
     "bower": "^1.4.1",
     "browserify": "^5.10.1",
