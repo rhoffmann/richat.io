@@ -1,0 +1,26 @@
+box: wercker/nodejs
+# Build definition
+build:
+  # The steps that will be executed on build
+  steps:
+    # A step that executes `npm install` command
+    - npm-install
+
+    # A step that executes `npm test` command
+    - npm-test
+
+    - script:
+      name: build app
+      code: ./node_modules/gulp/bin/gulp build
+
+    # A custom script step, name value is used in the UI
+    # and the code value contains the command that get executed
+    - script:
+        name: echo nodejs information
+        code: |
+          echo "node version $(node -v) running"
+          echo "npm version $(npm -v) running"
+
+deploy:
+  steps:
+    - heroku-deploy
