@@ -4,11 +4,11 @@ build:
     # The steps that will be executed on build
     steps:
 
-        - npm-install
-
         - script:
             name: build all the things
             code: |
+                npm cache clear
+                npm install
                 node_modules/.bin/bower install --config.interactive=false
                 node_modules/.bin/gulp dist
 
