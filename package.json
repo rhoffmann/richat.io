@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/rynclark/flux-getting-started",
   "devDependencies": {
+    "bower": "^1.4.1",
     "browserify": "^5.10.1",
     "connect-livereload": "~0.3.2",
     "express": "~3.4.8",
