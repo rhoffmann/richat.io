@@ -132,7 +132,7 @@ gulp.task('assets', function() {
   gulp.src('src/img/**/*')
     .pipe(gulp.dest('dist/img'));
 
-  gulp.src('libs/react/react-with-addons.js')
+  gulp.src('bower_components/react/react-with-addons.js')
     .pipe(gulp.dest('dist/js'));
 })
 
