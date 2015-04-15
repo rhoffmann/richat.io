@@ -146,7 +146,7 @@ gulp.task('styles', function(){
   var styles = gulp.src(SRC_DIR + '/scss/app.scss')
     .pipe(plumber())
     .pipe(sass())
-    .pipe(autoprefixer('last 1 version', '> 1%', 'ie 8', 'ie 7'))
+    .pipe(autoprefixer('last 2 version', '> 1%'))
     .on('error', notify.onError())
     .pipe(gulp.dest('dist/css'))
 
