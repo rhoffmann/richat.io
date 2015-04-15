@@ -5,5 +5,6 @@ var preprocess = require('gulp-preprocess');
 module.exports = function () {
 	return gulp.src('public/src/**/*.html')
 		.pipe(preprocess({context: { dev: true }}))
-		.pipe(gulp.dest('public/dist'));
+		.pipe(gulp.dest('public/dist'))
+		.pipe(refresh(global.lrserver));
 };

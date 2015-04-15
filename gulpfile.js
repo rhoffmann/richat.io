@@ -19,7 +19,9 @@ gulp.task('copy:libs', copyLibs);
 
 gulp.task('build', [
   'scripts',
-  'styles'
+  'styles',
+  'copy:libs',
+  'copy:html'
   ]);
 
 gulp.task('test', [
@@ -31,7 +33,5 @@ gulp.task('test', [
 gulp.task('default', [
   'server',
   'build',
-  'copy:libs',
-  'copy:html',
   'watch'
   ]);
