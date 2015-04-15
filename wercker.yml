@@ -10,7 +10,7 @@ build:
             name: build all the things
             code: |
                 node_modules/.bin/bower install --config.interactive=false
-                node_modules/.bin/gulp build
+                node_modules/.bin/gulp dist
 
         - script:
             name: echo nodejs information
