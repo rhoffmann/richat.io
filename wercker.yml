@@ -11,7 +11,7 @@ build:
 
         - script:
             name: build app
-            code: ./node_modules/gulp/bin/gulp build
+            code: ./node_modules/gulp/bin/gulp.js build
 
         # A custom script step, name value is used in the UI
         # and the code value contains the command that get executed
