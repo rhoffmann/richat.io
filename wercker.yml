@@ -21,6 +21,6 @@ build:
                 echo "node version $(node -v) running"
                 echo "npm version $(npm -v) running"
 
-    deploy:
-        steps:
-            - heroku-deploy
+deploy:
+    steps:
+        - heroku-deploy
