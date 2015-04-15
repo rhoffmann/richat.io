@@ -3,18 +3,15 @@ box: wercker/nodejs
 build:
     # The steps that will be executed on build
     steps:
-        # A step that executes `npm install` command
-        - npm-install
-
-        # A step that executes `npm test` command
-        # - npm-test
 
         - script:
-            name: build app
-            code: ./node_modules/gulp/bin/gulp.js build
+            name: build all the things
+            code: |
+                npm cache clean
+                npm install
+                node_modules/.bin/bower install --config.interactive=false
+                node_modules/.bin/gulp build
 
-        # A custom script step, name value is used in the UI
-        # and the code value contains the command that get executed
         - script:
             name: echo nodejs information
             code: |
