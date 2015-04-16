@@ -20,8 +20,6 @@ build:
 
 deploy:
     steps:
-        - s3sync:
-            source_dir: dist/
-            bucket-url: $AWS_BUCKET_URL
-            key-id: $AWS_ACCESS_KEY_ID
-            key-secret: $AWS_SECRET_ACCESS_KEY
+        - script:
+            name: deploy to s3
+            code: node_modules/.bin/gulp publish

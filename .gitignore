@@ -1,6 +1,6 @@
 bower_components
 node_modules
-#dist
+dist
 tmp
 test/coverage
 test/results
@@ -8,3 +8,4 @@ test/results
 .sass-cache
 .DS_Store
 .idea
+.awspublish-*

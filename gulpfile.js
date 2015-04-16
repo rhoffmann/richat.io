@@ -18,6 +18,8 @@ var autoprefixer  = require('gulp-autoprefixer');
 var notify      = require('gulp-notify');
 var rename      = require('gulp-rename');
 var sass        = require('gulp-sass');
+var awsPublish  = require('gulp-awspublish');
+var AWS = require('aws-sdk');
 
 var watch;
 
@@ -154,5 +156,38 @@ gulp.task('styles', function(){
 
 })
 
+gulp.task('publish', function() {
+ // AWS.config.loadFromPath('./config/aws.json');
+
+
+  // create a new publisher
+  var publisher = awsPublish.create({
+    "bucket": "richat.io",
+    "region": "eu-west-1"
+  });
+
+  // define custom headers
+  var headers = {
+  //   'Cache-Control': 'max-age=315360000, no-transform, public'
+  };
+
+  return gulp.src('./dist/**/*')
+
+     // gzip, Set Content-Encoding headers and add .gz extension
+    //.pipe(awsPublish.gzip({ ext: '.gz' }))
+
+    // publisher will add Content-Length, Content-Type and headers specified above
+    // If not specified it will set x-amz-acl to public-read by default
+    .pipe(publisher.publish(headers))
+
+    // create a cache file to speed up consecutive uploads
+    .pipe(publisher.cache())
+
+     // print upload updates to console
+    .pipe(awsPublish.reporter());
+});
+
+
+gulp.task('deploy', ['dist', 'publish']);
 gulp.task('dist', ['scripts', 'styles', 'html', 'assets']);
 gulp.task('default', ['watch']);
