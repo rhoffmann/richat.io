@@ -117,14 +117,14 @@ gulp.task('watch', function() {
 
   browserSync({
     server: {
-      baseDir: "./"
+      baseDir: "./dist/"
     }
   });
 
   watch = true;
   browserifyShare();
 
-  gulp.watch( paths.watchJs, ['lint']);
+  // gulp.watch( paths.watchJs, ['lint']);
 });
 
 gulp.task('assets', function() {

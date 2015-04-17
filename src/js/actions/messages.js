@@ -6,6 +6,14 @@ var messagesAction = {
       type: 'updateOpenChatID',
       userID: newUserID
     });
+  },
+  sendMessage: function(userID, message) {
+    Dispatcher.handleViewAction({
+      type: 'sendMessage',
+      userID: userID,
+      message: message,
+      timestamp: +new Date()
+    })
   }
 };
 

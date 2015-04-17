@@ -1,4 +1,5 @@
 var Dispatcher = require('../dispatchers/app');
+var UserStore = require('./user');
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 
@@ -76,6 +77,8 @@ var messages = {
 
 var openChatID = parseInt(Object.keys(messages)[0], 10);
 
+console.log(openChatID);
+
 var messagesStore = assign({}, EventEmitter.prototype, {
   addChangeListener: function (callback) {
     this.on('change', callback);
@@ -97,8 +100,24 @@ var messagesStore = assign({}, EventEmitter.prototype, {
 messagesStore.dispatchToken = Dispatcher.register(function(payload) {
 
   var actions = {
+
     updateOpenChatID: function(payload) {
       openChatID = payload.action.userID;
+      messages[openChatID].lastAccess.currentUser = +new Date();
+      messagesStore.emit('change');
+    },
+
+    sendMessage: function(payload) {
+      var userID = payload.action.userID;
+
+      messages[userID].messages.push({
+        contents: payload.action.message,
+        timestamp: payload.action.timestamp,
+        from: UserStore.user.id
+      });
+
+      messages[userID].lastAccess.currentUser = +new Date();
+
       messagesStore.emit('change');
     }
   }
