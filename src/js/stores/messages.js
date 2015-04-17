@@ -3,81 +3,11 @@ var UserStore = require('./user');
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 
-var messages = {
-  1: {
-    user: {
-      profilePicture: 'https://avatars0.githubusercontent.com/u/7922109?v=3&s=460',
-      id: 1,
-      name: 'Ryan Clark',
-      status: 'online'
-    },
-    lastAccess: {
-      recipient: 1424469794050,
-      currentUser: 1424469794080
-    },
-    messages: [
-      {
-        contents: 'Hey!',
-        from: 2,
-        timestamp: 1424469793023
-      },
-      {
-        contents: 'HeyHo!',
-        from: 2,
-        timestamp: 1424469793024
-      },
-      {
-        contents: 'Hey, what\'s up?',
-        from: 1,
-        timestamp: 1424469794000
-      },
-      {
-        contents: 'YUNO?',
-        from: 2,
-        timestamp: 1424469795000
-      },
-      {
-        contents: 'WORK?',
-        from: 1,
-        timestamp: 1424469796000
-      }
-    ]
-  },
-  2 : {
-    user: {
-      profilePicture: 'https://avatars3.githubusercontent.com/u/678772?v=3&s=200',
-      id: 2,
-      name: 'Richard Hoffmann',
-      status: 'online'
-    },
-    lastAccess: {
-      recipient: 1424469794050,
-      currentUser: 1424469794080
-    },
-    messages: [
-      {
-        contents: 'Hey!',
-        from: 2,
-        timestamp: 1424469793023
-      },
-      {
-        contents: 'YUNO?',
-        from: 2,
-        timestamp: 1424469795000
-      },
-      {
-        contents: 'WORK?',
-        from: 1,
-        timestamp: 1424469796000
-      }
-    ]
-  }
-};
+var chats = {};
+var Firebase = require('firebase');
+var ref = new Firebase('https://vivid-inferno-3500.firebaseio.com/');
 
-
-var openChatID = parseInt(Object.keys(messages)[0], 10);
-
-console.log(openChatID);
+var openChatID = parseInt(Object.keys(chats)[0], 10);
 
 var messagesStore = assign({}, EventEmitter.prototype, {
   addChangeListener: function (callback) {
@@ -90,12 +20,23 @@ var messagesStore = assign({}, EventEmitter.prototype, {
     return openChatID;
   },
   getChatByUserID: function(id) {
-    return messages[id];
+    return chats[id];
   },
   getAllChats: function() {
-    return messages;
+    return chats;
   }
 });
+
+ref.child('chats').on('value', function(snapshot) {
+   chats = snapshot.val();
+   if (chats) {
+      openChatID = parseInt(Object.keys(chats)[0], 10);
+      messagesStore.emit('change');
+   } else {
+      chats = {};
+   }
+});
+
 
 messagesStore.dispatchToken = Dispatcher.register(function(payload) {
 
@@ -103,20 +44,24 @@ messagesStore.dispatchToken = Dispatcher.register(function(payload) {
 
     updateOpenChatID: function(payload) {
       openChatID = payload.action.userID;
-      messages[openChatID].lastAccess.currentUser = +new Date();
+      chats[openChatID].lastAccess.currentUser = +new Date();
       messagesStore.emit('change');
     },
 
     sendMessage: function(payload) {
       var userID = payload.action.userID;
 
-      messages[userID].messages.push({
+      chats[userID] = chats[userID] || { user : UserStore.user, messages : [], lastAccess : {} };
+
+      chats[userID].messages.push({
         contents: payload.action.message,
         timestamp: payload.action.timestamp,
         from: UserStore.user.id
       });
 
-      messages[userID].lastAccess.currentUser = +new Date();
+      chats[userID].lastAccess.currentUser = +new Date();
+
+      ref.child('chats/'+ UserStore.user.id).set(chats[userID]);
 
       messagesStore.emit('change');
     }

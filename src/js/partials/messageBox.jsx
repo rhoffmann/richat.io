@@ -12,7 +12,9 @@ function getStateFromStore() {
 var MessageBox = React.createClass({
 
 	getInitialState: function () {
-		return getStateFromStore();
+		return {
+			messages : []
+		}
 	},
 	componentWillMount: function() {
 		MessagesStore.addChangeListener(this.onStoreChange);
@@ -43,19 +45,22 @@ var MessageBox = React.createClass({
 			);
 		});
 
-		var lastMessage = this.state.messages[messagesLength -1];
+		if (messagesLength) {
+			var lastMessage = this.state.messages[messagesLength -1];
 
-		if (lastMessage.from === currentUserID) {
-			if (this.state.lastAccess.recipient >= lastMessage.timestamp) {
-				var date = Utils.getShortDate(lastMessage.timestamp);
-				messages.push(
-					<li key="read" className="message-box__item message-box__item--read">
-						<div className="message-box__item__contents">
-							Read { date }
-						</div>
-					</li>
-				);
+			if (lastMessage.from === currentUserID) {
+				if (this.state.lastAccess.recipient >= lastMessage.timestamp) {
+					var date = Utils.getShortDate(lastMessage.timestamp);
+					messages.push(
+						<li key="read" className="message-box__item message-box__item--read">
+							<div className="message-box__item__contents">
+								Read { date }
+							</div>
+						</li>
+					);
+				}
 			}
+
 		}
 
 		return (
