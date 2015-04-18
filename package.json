@@ -4,7 +4,8 @@
   "description": "the best chat app for rich people",
   "main": "./",
   "scripts": {
-    "test": "mocha --reporter spec --compilers jsx:src/test/compiler.js src/test/test-helper.js src/test/*test.jsx"
+    "test": "node node_modules/jest-cli/bin/jest.js",
+    "test-mocha": "mocha --reporter spec --compilers jsx:src/test/compiler.js src/test/test-helper.js src/test/*test.jsx"
   },
   "repository": {
     "type": "git",
@@ -26,10 +27,9 @@
     ]
   },
   "devDependencies": {
-    "assertion": "^1.2.18",
-    "aws-sdk": "^2.1.23",
     "babel": "^5.0.12",
     "babel-eslint": "^2.0.2",
+    "babel-jest": "^5.0.1",
     "babelify": "^6.0.2",
     "bower": "^1.4.1",
     "browser-sync": "^2.5.3",
@@ -42,8 +42,6 @@
     "gulp-if": "^1.2.5",
     "gulp-jshint": "^1.10.0",
     "gulp-notify": "^2.2.0",
-    "gulp-plumber": "^1.0.0",
-    "gulp-rename": "^1.2.2",
     "gulp-sass": "^1.3.3",
     "gulp-sourcemaps": "^1.5.1",
     "gulp-streamify": "0.0.5",
@@ -52,7 +50,6 @@
     "jest-cli": "^0.4.0",
     "jsdom": "^5.0.1",
     "jshint-stylish": "^1.0.1",
-    "mocha": "^2.2.4",
     "reactify": "^1.1.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
@@ -61,11 +58,19 @@
   "engines": {
     "node": "~0.10"
   },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "testDirectoryName": "tests",
+    "testFileExtensions": ["js", "jsx"],
+    "testPathDirs" : ["src/js/"],
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/react",
+      "<rootDir>/node_modules/react-tools"
+    ]
+  },
   "dependencies": {
-    "express": "^4.12.3",
     "firebase": "^2.2.4",
     "flux": "^2.0.1",
-    "immutable": "^3.7.2",
     "object-assign": "^2.0.0",
     "react": "^0.13.1",
     "react-tools": "^0.13.1"
