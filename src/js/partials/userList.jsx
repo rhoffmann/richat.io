@@ -1,8 +1,9 @@
+var React = require('react/addons');
+
 var utils = require('../utils');
 
 var MessagesStore = require('../stores/messages');
 var MessagesActions = require('../actions/messages');
-
 var UserStore = require('../stores/user');
 
 function getStateFromStore() {

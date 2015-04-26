@@ -1,64 +1,50 @@
 var gulp = require('gulp');
-var gutil = require('gulp-util');
+var g = require('gulp-load-plugins')();
+
 var browserify = require('browserify');
 var watchify = require('watchify');
 var babelify = require('babelify');
-var sourcemaps = require('gulp-sourcemaps');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
-var eslint = require('gulp-eslint');
-var jshint = require('gulp-jshint');
-var uglify = require('gulp-uglify');
-var gulpif = require('gulp-if');
-var streamify = require('gulp-streamify');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
-var plumber     = require('gulp-plumber');
-var autoprefixer  = require('gulp-autoprefixer');
-var notify      = require('gulp-notify');
-var rename      = require('gulp-rename');
-var sass        = require('gulp-sass');
-var awsPublish  = require('gulp-awspublish');
-var AWS = require('aws-sdk');
 
 var watch;
-
 var DIST_DIR = './dist';
 var SRC_DIR = './src';
 
 var paths = {
-  js: SRC_DIR + '/js/app.jsx',
-  watchJs : SRC_DIR + '/**/*.js?',
+  entryJS: SRC_DIR + '/js/app.jsx',
+  watchJS : SRC_DIR + '/**/*.js?',
 };
 
 function lintAllTheThings() {
-  return gulp.src( paths.watchJs )
-    .pipe(eslint({
+  return gulp.src( paths.watchJS )
+    .pipe(g.eslint({
       useEslintrc : true,
       globals: {
         '_' : true
       }
     }))
-    .pipe(eslint.format())
-    .pipe(eslint.failOnError());
+    .pipe(g.eslint.format())
+    .pipe(g.eslint.failOnError());
 }
 
 function browserifyShare() {
-  var b = browserify( paths.js, {
+  var b = browserify({
     debug: true,
     extensions: ['.jsx'],
     insertGlobalVars: true,
     cache: {},
     packageCache: {},
     fullPaths: false
-    //transform: ["reactify", "browserify-shim"]
-  });
-
-  b.transform(
+  })
+  .transform(
     babelify.configure({
-      // optional: ["runtime"]
+      optional: ["runtime"]
     })
-  ).require(paths.js, {entry: true})
+  )
+  .require(paths.entryJS, {entry: true})
 
   if (watch) {
     b = watchify(b);
@@ -77,21 +63,22 @@ function browserifyShare() {
     });
   }
 
-  b.on('log', gutil.log);
+  b.on('log', g.util.log);
 
   return bundleShare(b);
 }
 
 function bundleShare(b) {
   return b.bundle()
-    .on('error', gutil.log.bind(gutil, 'Browserify Error' ))
-    .pipe(source('app.js'))
+    .on('error', g.util.log.bind(g.util, 'Browserify Error' ))
+    .pipe(source('bundle.js'))
     .pipe(buffer())
-    .pipe(sourcemaps.init({loadMaps: true, sourceRoot: '/dist'}))
-    .pipe(uglify())
-    .pipe(sourcemaps.write('./'))
+    .pipe(g.sourcemaps.init({loadMaps: true, sourceRoot: '/dist'}))
+    .pipe(g.uglify())
+    .pipe(g.sourcemaps.write('./'))
+    // TODO: rev
     .pipe(gulp.dest(DIST_DIR + '/js'))
-    .pipe(gulpif(watch, reload({stream:true})));
+    .pipe(g.if(watch, reload({stream:true})));
 }
 
 gulp.task('scripts', function() {
@@ -107,14 +94,7 @@ gulp.task('lint', function(){
   return lintAllTheThings();
 });
 
-gulp.task('jshint', function() {
-  return gulp.src( paths.watchJs )
-    .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'));
-});
-
 gulp.task('watch', function() {
-
   browserSync({
     server: {
       baseDir: "./dist/"
@@ -123,8 +103,6 @@ gulp.task('watch', function() {
 
   watch = true;
   browserifyShare();
-
-  // gulp.watch( paths.watchJs, ['lint']);
 });
 
 gulp.task('assets', function() {
@@ -134,9 +112,7 @@ gulp.task('assets', function() {
   gulp.src('src/img/**/*')
     .pipe(gulp.dest('dist/img'));
 
-  gulp.src('bower_components/react/react-with-addons.js')
-    .pipe(gulp.dest('dist/js'));
-})
+});
 
 gulp.task('html', function() {
   return gulp.src('src/**/*.html')
@@ -146,10 +122,10 @@ gulp.task('html', function() {
 
 gulp.task('styles', function(){
   var styles = gulp.src(SRC_DIR + '/scss/app.scss')
-    .pipe(plumber())
-    .pipe(sass())
-    .pipe(autoprefixer('last 2 version', '> 1%'))
-    .on('error', notify.onError())
+    .pipe(g.plumber())
+    .pipe(g.sass())
+    .pipe(g.autoprefixer('last 2 version', '> 1%'))
+    .on('error', g.notify.onError())
     .pipe(gulp.dest('dist/css'))
 
   return styles;
@@ -157,11 +133,9 @@ gulp.task('styles', function(){
 })
 
 gulp.task('publish', function() {
- // AWS.config.loadFromPath('./config/aws.json');
-
 
   // create a new publisher
-  var publisher = awsPublish.create({
+  var publisher = g.awspublish.create({
     "bucket": "richat.io",
     "region": "eu-west-1"
   });
@@ -184,7 +158,7 @@ gulp.task('publish', function() {
     .pipe(publisher.cache())
 
      // print upload updates to console
-    .pipe(awsPublish.reporter());
+    .pipe(g.awspublish.reporter());
 });
 
 

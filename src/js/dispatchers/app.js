@@ -1,9 +1,6 @@
 var Dispatcher = require('flux').Dispatcher;
 
-var assign = require('object-assign');
-
-
-var appDispatcher = assign(new Dispatcher(), {
+var appDispatcher = Object.assign(new Dispatcher(), {
   handleServerAction: function (action) {
     this.dispatch({
       source: 'server',

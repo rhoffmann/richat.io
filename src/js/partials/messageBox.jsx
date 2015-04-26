@@ -1,5 +1,6 @@
-var ReplyBox = require('../components/replyBox');
+var React = require('react/addons');
 
+var ReplyBox = require('../components/replyBox');
 var MessagesStore = require('../stores/messages');
 var UserStore = require('../stores/user');
 

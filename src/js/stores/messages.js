@@ -1,7 +1,6 @@
 var Dispatcher = require('../dispatchers/app');
 var UserStore = require('./user');
 var EventEmitter = require('events').EventEmitter;
-var assign = require('object-assign');
 
 var chats = {};
 var Firebase = require('firebase');
@@ -9,7 +8,7 @@ var ref = new Firebase('https://vivid-inferno-3500.firebaseio.com/');
 
 var openChatID = parseInt(Object.keys(chats)[0], 10);
 
-var messagesStore = assign({}, EventEmitter.prototype, {
+var messagesStore = Object.assign({}, EventEmitter.prototype, {
   addChangeListener: function (callback) {
     this.on('change', callback);
   },
