@@ -1,6 +1,10 @@
 var React = require('react/addons');
 
 var utils = require('../utils');
+var _ = require('lodash');
+
+// TODO: refactor to message collection
+// TODO: refactor to props
 
 var MessagesStore = require('../stores/messages');
 var MessagesActions = require('../actions/messages');
@@ -32,10 +36,10 @@ var UserList = React.createClass({
 		return getStateFromStore();
 	},
 	componentWillMount: function() {
-		MessagesStore.addChangeListener(this.onStoreChange);
+		MessagesStore.subscribe(this.onStoreChange);
 	},
 	componentWillUnmount: function() {
-		MessagesStore.removeChangeListener(this.onStoreChange);
+		MessagesStore.unsubscribe(this.onStoreChange);
 	},
 	onStoreChange: function() {
 		this.setState(getStateFromStore());

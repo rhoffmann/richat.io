@@ -1,78 +1,67 @@
 var React = require('react/addons');
-
 var ReplyBox = require('../components/replyBox');
-var MessagesStore = require('../stores/messages');
-var UserStore = require('../stores/user');
-
 var Utils = require('../utils');
+var _ = require('lodash');
 
-function getStateFromStore() {
-	return MessagesStore.getChatByUserID(MessagesStore.getOpenChatUserID());
-}
+export default React.createClass({
+    getDefaultProps() {
+        return {
+            chat: {
+                lastAccess: +new Date(),
+                from: {
+                    '-1' : {}
+                },
+                messages: []
+            },
+            user : {
+                id : '-1'
+            }
+        }
+    },
+    render() {
+        var messagesLength = _.size(this.props.chat.messages);
+        var currentUserID = this.props.user.id;
 
-var MessageBox = React.createClass({
+        var messages = _.map(this.props.chat.messages, function (message, index) {
+            var messageClasses = React.addons.classSet({
+                'message-box__item': true,
+                'message-box__item--from-current': message.from === currentUserID,
+                'clear': true
+            });
 
-	getInitialState: function () {
-		return {
-			messages : []
-		}
-	},
-	componentWillMount: function() {
-		MessagesStore.addChangeListener(this.onStoreChange);
-	},
-	componentWillUnmount: function() {
-		MessagesStore.removeChangeListener(this.onStoreChange);
-	},
-	onStoreChange: function() {
-		this.setState(getStateFromStore());
-	},
-	render: function () {
-		var messagesLength = this.state.messages.length;
-		var currentUserID = UserStore.user.id;
+            return (
+                <li key={ message.timestamp + '-' + message.from } className={ messageClasses }>
+                    <div className="message-box__item__contents">
+                        { message.contents }
+                    </div>
+                </li>
+            );
+        });
 
-		var messages = this.state.messages.map(function (message, index) {
-			var messageClasses = React.addons.classSet({
-				'message-box__item': true,
-				'message-box__item--from-current': message.from === currentUserID,
-				'clear': true
-			});
+        // if (messagesLength) {
+        //     var lastMessage = _this.props.chat.messages;
 
-			return (
-				<li key={ message.timestamp + '-' + message.from } className={ messageClasses }>
-					<div className="message-box__item__contents">
-						{ message.contents }
-					</div>
-				</li>
-			);
-		});
+        //     if (lastMessage.from === currentUserID) {
+        //         if (this.props.chat.lastAccess.recipient >= lastMessage.timestamp) {
+        //             var date = Utils.getShortDate(lastMessage.timestamp);
+        //             messages.push(
+        //                 <li key="read" className="message-box__item message-box__item--read">
+        //                     <div className="message-box__item__contents">
+        //                         Read { date }
+        //                     </div>
+        //                 </li>
+        //             );
+        //         }
+        //     }
+        // }
 
-		if (messagesLength) {
-			var lastMessage = this.state.messages[messagesLength -1];
-
-			if (lastMessage.from === currentUserID) {
-				if (this.state.lastAccess.recipient >= lastMessage.timestamp) {
-					var date = Utils.getShortDate(lastMessage.timestamp);
-					messages.push(
-						<li key="read" className="message-box__item message-box__item--read">
-							<div className="message-box__item__contents">
-								Read { date }
-							</div>
-						</li>
-					);
-				}
-			}
-
-		}
-
-		return (
-			<div className="message-box">
-				<ul className="message-box__list">
-					{ messages }
-				</ul>
-				<ReplyBox />
-			</div>
-		);
-	}
+        return (
+            <div className="message-box">
+                <ul className="message-box__list">
+                    { messages }
+                </ul>
+                <ReplyBox />
+            </div>
+        );
+    }
 });
-
-module.exports = MessageBox;

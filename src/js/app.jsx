@@ -2,22 +2,39 @@ var React = require('react/addons');
 
 var Header = require('./partials/header');
 var UserList = require('./partials/userList');
-var MessageBox = require('./partials/messageBox');
 
-var ES6Test = require('./es6test');
-ES6Test.start();
+import MessageBox from './partials/messageBox';
+var MessagesActions = require('./actions/messages');
+var MessagesStore = require('./stores/messages');
+var UserStore = require('./stores/user');
 
-var Page = React.createClass({
-	render: function () {
-		return (
-			<div className="app">
-				<Header />
+function state() {
+    return {
+        chats : MessagesStore.getAllChats(),
+        user : UserStore.user.id,
+        activeChat : MessagesStore.getActiveChat()
+    }
+}
 
-				<UserList />
-				<MessageBox />
-			</div>
-		);
-	}
+let App = React.createClass({
+
+    getInitialState: state,
+    componentWillMount()    { MessagesStore.subscribe(this._update); },
+    componentDidMount()     { MessagesActions.poll(); },
+    componentWillUnmount()  { MessagesStore.unsubscribe(this._update); },
+    _update()               {
+        this.setState( state() )
+    },
+    displayName : "App",
+    render() {
+        return (
+            <div className="app">
+                <Header chats={this.state.chats} />
+                <UserList user={this.state.user} chats={this.state.chats} />
+                <MessageBox user={this.state.user} chat={this.state.activeChat} />
+            </div>
+        );
+    }
 });
 
-React.render(<Page />, document.getElementById('page'));
+React.render(<App />, document.getElementById('page'));

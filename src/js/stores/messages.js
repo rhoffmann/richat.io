@@ -3,39 +3,31 @@ var UserStore = require('./user');
 var EventEmitter = require('events').EventEmitter;
 
 var chats = {};
-var Firebase = require('firebase');
-var ref = new Firebase('https://vivid-inferno-3500.firebaseio.com/');
-
-var openChatID = parseInt(Object.keys(chats)[0], 10);
+var openChatID;
 
 var messagesStore = Object.assign({}, EventEmitter.prototype, {
-  addChangeListener: function (callback) {
+  subscribe: function (callback) {
     this.on('change', callback);
   },
-  removeChangeListener: function (callback) {
+  unsubscribe: function (callback) {
     this.off('change', callback);
+  },
+  getActiveChat: function() {
+    return this.getChatByUserID(this.getOpenChatUserID());
   },
   getOpenChatUserID: function() {
     return openChatID;
   },
   getChatByUserID: function(id) {
+    if (typeof id === 'undefined') {
+      return { messages : [] };
+    }
     return chats[id];
   },
   getAllChats: function() {
     return chats;
   }
 });
-
-ref.child('chats').on('value', function(snapshot) {
-   chats = snapshot.val();
-   if (chats) {
-      openChatID = parseInt(Object.keys(chats)[0], 10);
-      messagesStore.emit('change');
-   } else {
-      chats = {};
-   }
-});
-
 
 messagesStore.dispatchToken = Dispatcher.register(function(payload) {
 
@@ -53,15 +45,19 @@ messagesStore.dispatchToken = Dispatcher.register(function(payload) {
       chats[userID] = chats[userID] || { user : UserStore.user, messages : [], lastAccess : {} };
 
       chats[userID].messages.push({
-        contents: payload.action.message,
+        contents: payload.action.contents,
         timestamp: payload.action.timestamp,
-        from: UserStore.user.id
+        from: payload.action.from
       });
 
       chats[userID].lastAccess.currentUser = +new Date();
 
-      ref.child('chats/'+ UserStore.user.id).set(chats[userID]);
+      messagesStore.emit('change');
+    },
 
+    updateChats: function(payload) {
+      chats = payload.action.chats;
+      openChatID = parseInt(Object.keys(chats, 0), 10);
       messagesStore.emit('change');
     }
   }
