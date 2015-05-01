@@ -15,10 +15,14 @@ var ReplyBox = React.createClass({
   },
   handleKeyDown: function(e) {
     if (e.keyCode === 13) {
+      if (this.refs.replyBox.getDOMNode().value === '') { return; }
+
       MessagesActions.sendMessage(MessagesStore.getOpenChatUserID(), this.state.value);
 
       this.setState({
         value: ''
+      }, function() {
+        this.refs.replyBox.getDOMNode().focus();
       });
     }
   },
@@ -26,6 +30,7 @@ var ReplyBox = React.createClass({
     return (
       <div className="reply-box">
         <input
+          ref="replyBox"
           value={ this.state.value }
           onChange={ this.updateValue }
           onKeyDown={ this.handleKeyDown }
