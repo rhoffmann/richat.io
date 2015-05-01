@@ -135,7 +135,7 @@ gulp.task('publish-aws', function() {
   });
 
   var headers = {
-     'Cache-Control': 'max-age=315360000, no-transform, public'
+    // 'Cache-Control': 'max-age=315360000, no-transform, public'
   };
 
   return gulp.src('./dist/**/*')

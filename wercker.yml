@@ -22,4 +22,4 @@ deploy:
     steps:
         - script:
             name: deploy to s3
-            code: node_modules/.bin/gulp publish
+            code: node_modules/.bin/gulp publish-aws
