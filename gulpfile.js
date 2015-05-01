@@ -23,7 +23,8 @@ function lintAllTheThings(ids) {
   return gulp.src( ids || paths.watchJS )
     .pipe(g.eslint())
     .pipe(g.eslint.format())
-    .pipe(g.if(!WATCH, g.eslint.failOnError()));
+    .pipe(g.eslint.failOnError())
+    .on('error', g.notify.onError('LINT ERRORS: <%= error.message %>'));
 }
 
 function browserifyShare() {
@@ -46,14 +47,11 @@ function browserifyShare() {
     b = watchify(b);
 
     b.on('update', function(ids) {
-      // FIXME: watchify needs to rebundle
+      // FIXME: watchify needs to rebundle, but gets stuck on lint errors
+      // so i disabled eslint.failOnError() for WATCH tasks, the bundle will
+      // recompile on failing lints
       lintAllTheThings(ids)
-        .on('finish', function(e) {
-          bundleShare(b);
-        })
-        .on('error', function (e) {
-          g.util.log('lint error ' + e.message);
-        });
+      bundleShare(b);
     });
   }
 
