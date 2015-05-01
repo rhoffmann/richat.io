@@ -8,7 +8,12 @@ npm install && bower install
 
 
 ```
-gulp
+gulp watch
 
 ```
 
+
+```
+karma start
+gulp test
+```

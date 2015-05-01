@@ -9,7 +9,6 @@ var MessagesActions = require('./actions/messages');
 var MessagesStore = require('./stores/messages');
 var UserStore = require('./stores/user');
 
-
 function state() {
   return {
     chats: MessagesStore.getAllChats(),

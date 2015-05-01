@@ -2,6 +2,8 @@ var Dispatcher = require('../dispatchers/app');
 var UserStore = require('./user');
 var EventEmitter = require('events').EventEmitter;
 
+var sortBy = require('lodash/collection/sortBy');
+
 var chats = {};
 var openChatID;
 
@@ -40,13 +42,7 @@ messagesStore.dispatchToken = Dispatcher.register(function(payload) {
     },
 
     sendMessage: function(data) {
-      var userID = data.action.userID;
-
-      chats[userID] = chats[userID] || {
-        user: UserStore.user,
-        messages: [],
-        lastAccess: {}
-      };
+      var userID = data.action.from;
 
       chats[userID].messages.push({
         contents: data.action.contents,
@@ -60,7 +56,14 @@ messagesStore.dispatchToken = Dispatcher.register(function(payload) {
     },
 
     updateChats: function(data) {
+
       chats = data.action.chats;
+
+      // all chat messages need to be converted into arrays
+      Object.keys(chats).forEach(function(key) {
+        chats[key].messages = sortBy(chats[key].messages, 'timestamp');
+      });
+
       openChatID = parseInt(Object.keys(chats, 0), 10);
       messagesStore.emit('change');
     }

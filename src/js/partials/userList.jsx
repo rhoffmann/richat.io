@@ -1,29 +1,35 @@
 var React = require('react/addons');
-
 var Utils = require('../utils');
+
+var sortBy = require('lodash/collection/sortBy');
 
 // TODO: refactor to message collection
 // TODO: refactor to props
+
+
 
 var MessagesStore = require('../stores/messages');
 var MessagesActions = require('../actions/messages');
 var UserStore = require('../stores/user');
 
-function getStateFromStore() {
+function state() {
   var allMessages = MessagesStore.getAllChats();
 
   var messageList = [];
 
   for (var id in allMessages) {
     var item = allMessages[id];
-    var messagesLength = item.messages.length;
+
+    var messages = sortBy(item.messages, 'timestamp');
+    var messagesLength = messages.length;
 
     messageList.push({
-      lastMessage: item.messages[messagesLength - 1],
+      lastMessage: messages[messagesLength - 1],
       lastAccess: item.lastAccess,
       user: item.user
     });
   }
+
   return {
     openChatID: MessagesStore.getOpenChatUserID(),
     messageList: messageList
@@ -32,7 +38,7 @@ function getStateFromStore() {
 
 var UserList = React.createClass({
   getInitialState: function () {
-    return getStateFromStore();
+    return state();
   },
   componentWillMount: function() {
     MessagesStore.subscribe(this.onStoreChange);
@@ -41,7 +47,7 @@ var UserList = React.createClass({
     MessagesStore.unsubscribe(this.onStoreChange);
   },
   onStoreChange: function() {
-    this.setState(getStateFromStore());
+    this.setState(state());
   },
   changeOpenChat: function(id) {
     MessagesActions.changeOpenChat(id);

@@ -1,4 +1,4 @@
-// jest.dontMock('../partials/header.jsx');
+require('./testdom')('<html><body></body></html>');
 
 var React = require('react/addons');
 var TestUtils = React.addons.TestUtils;
