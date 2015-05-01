@@ -1,6 +1,6 @@
-jest.dontMock('../partials/header.jsx');
+// jest.dontMock('../partials/header.jsx');
 
-var React = require("react/addons");
+var React = require('react/addons');
 var TestUtils = React.addons.TestUtils;
 var Header = require('../partials/header.jsx');
 

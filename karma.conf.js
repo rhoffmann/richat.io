@@ -23,7 +23,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'tests/**/*.js'
+      'src/js/tests/**/*.js'
     ],
 
     // list of files to exclude
@@ -33,12 +33,12 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-        'tests/**/*.js': ['browserify']
+        'src/js/tests/**/*.js': ['browserify']
     },
 
     browserify: {
         debug: true,
-        transform: [ 'babelify' ],
+        transform: [ ["babelify", { "optional": ["runtime", "es7.asyncFunctions"] }] ],
         extensions: ['.jsx']
     },
 

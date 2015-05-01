@@ -1,6 +1,4 @@
-jest.dontMock('../components/replyBox.jsx');
-
-var React = require("react/addons");
+var React = require('react/addons');
 var TestUtils = React.addons.TestUtils;
 var ReplyBox = require('../components/replyBox.jsx');
 

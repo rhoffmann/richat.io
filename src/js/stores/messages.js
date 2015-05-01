@@ -20,7 +20,7 @@ var messagesStore = Object.assign({}, EventEmitter.prototype, {
   },
   getChatByUserID: function(id) {
     if (typeof id === 'undefined') {
-      return { messages : [] };
+      return { messages: [] };
     }
     return chats[id];
   },
@@ -33,21 +33,25 @@ messagesStore.dispatchToken = Dispatcher.register(function(payload) {
 
   var actions = {
 
-    updateOpenChatID: function(payload) {
-      openChatID = payload.action.userID;
+    updateOpenChatID: function(data) {
+      openChatID = data.action.userID;
       chats[openChatID].lastAccess.currentUser = +new Date();
       messagesStore.emit('change');
     },
 
-    sendMessage: function(payload) {
-      var userID = payload.action.userID;
+    sendMessage: function(data) {
+      var userID = data.action.userID;
 
-      chats[userID] = chats[userID] || { user : UserStore.user, messages : [], lastAccess : {} };
+      chats[userID] = chats[userID] || {
+        user: UserStore.user,
+        messages: [],
+        lastAccess: {}
+      };
 
       chats[userID].messages.push({
-        contents: payload.action.contents,
-        timestamp: payload.action.timestamp,
-        from: payload.action.from
+        contents: data.action.contents,
+        timestamp: data.action.timestamp,
+        from: data.action.from
       });
 
       chats[userID].lastAccess.currentUser = +new Date();
@@ -55,14 +59,17 @@ messagesStore.dispatchToken = Dispatcher.register(function(payload) {
       messagesStore.emit('change');
     },
 
-    updateChats: function(payload) {
-      chats = payload.action.chats;
+    updateChats: function(data) {
+      chats = data.action.chats;
       openChatID = parseInt(Object.keys(chats, 0), 10);
       messagesStore.emit('change');
     }
+  };
+
+  if (actions[payload.action.type]) {
+    actions[payload.action.type](payload);
   }
 
-  actions[payload.action.type] && actions[payload.action.type](payload);
 });
 
 module.exports = messagesStore;
