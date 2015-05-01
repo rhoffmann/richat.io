@@ -5,7 +5,7 @@
   "main": "./",
   "scripts": {
     "test": "node node_modules/jest-cli/bin/jest.js",
-    "test-mocha": "mocha --reporter spec --compilers jsx:src/test/compiler.js src/test/test-helper.js src/test/*test.jsx"
+    "test-mocha": "mocha --reporter spec --compilers jsx:src/test/compiler.js src/test/test-helper.js src/test/*test.js"
   },
   "repository": {
     "type": "git",
@@ -48,6 +48,15 @@
     "gulp-util": "^3.0.4",
     "jest-cli": "^0.4.0",
     "jsdom": "^5.0.1",
+    "jasmine-core": "^2.3.0",
+    "karma-browserify": "^4.1.2",
+    "karma-chrome-launcher": "^0.1.8",
+    "karma-firefox-launcher": "^0.1.4",
+    "karma-jasmine": "^0.3.5",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-safari-launcher": "^0.1.1",
+    "karma-spec-reporter": "0.0.19",
+    "phantomjs": "^1.9.16",
     "jshint-stylish": "^1.0.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",

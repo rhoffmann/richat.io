@@ -1,0 +1,40 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/richard/.nvm/versions/io.js/v1.8.1/bin/iojs',
+1 verbose cli   '/Users/richard/.nvm/versions/io.js/v1.8.1/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'test-mocha' ]
+2 info using npm@2.8.3
+3 info using node@v1.8.1
+4 verbose run-script [ 'pretest-mocha', 'test-mocha', 'posttest-mocha' ]
+5 info pretest-mocha richat.io@0.0.1
+6 info test-mocha richat.io@0.0.1
+7 verbose unsafe-perm in lifecycle true
+8 info richat.io@0.0.1 Failed to exec test-mocha script
+9 verbose stack Error: richat.io@0.0.1 test-mocha: `mocha --reporter spec --compilers jsx:src/test/compiler.js src/test/test-helper.js src/test/*test.js`
+9 verbose stack spawn ENOENT
+9 verbose stack     at ChildProcess.<anonymous> (/Users/richard/.nvm/versions/io.js/v1.8.1/lib/node_modules/npm/lib/utils/spawn.js:17:16)
+9 verbose stack     at emitTwo (events.js:87:13)
+9 verbose stack     at ChildProcess.emit (events.js:169:7)
+9 verbose stack     at maybeClose (child_process.js:953:16)
+9 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:1020:5)
+10 verbose pkgid richat.io@0.0.1
+11 verbose cwd /Users/richard/Code/richat.io
+12 error Darwin 14.3.0
+13 error argv "/Users/richard/.nvm/versions/io.js/v1.8.1/bin/iojs" "/Users/richard/.nvm/versions/io.js/v1.8.1/bin/npm" "run" "test-mocha"
+14 error node v1.8.1
+15 error npm  v2.8.3
+16 error file sh
+17 error code ELIFECYCLE
+18 error errno ENOENT
+19 error syscall spawn
+20 error richat.io@0.0.1 test-mocha: `mocha --reporter spec --compilers jsx:src/test/compiler.js src/test/test-helper.js src/test/*test.js`
+20 error spawn ENOENT
+21 error Failed at the richat.io@0.0.1 test-mocha script 'mocha --reporter spec --compilers jsx:src/test/compiler.js src/test/test-helper.js src/test/*test.js'.
+21 error This is most likely a problem with the richat.io package,
+21 error not with npm itself.
+21 error Tell the author that this fails on your system:
+21 error     mocha --reporter spec --compilers jsx:src/test/compiler.js src/test/test-helper.js src/test/*test.js
+21 error You can get their info via:
+21 error     npm owner ls richat.io
+21 error There is likely additional logging output above.
+22 verbose exit [ 1, true ]

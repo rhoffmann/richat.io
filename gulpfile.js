@@ -41,7 +41,7 @@ function browserifyShare() {
   })
   .transform(
     babelify.configure({
-      optional: ["runtime"]
+      optional: ["runtime", "es7.asyncFunctions"]
     })
   )
   .require(paths.entryJS, {entry: true})
@@ -126,13 +126,17 @@ gulp.task('styles', function(){
     .pipe(g.sass())
     .pipe(g.autoprefixer('last 2 version', '> 1%'))
     .on('error', g.notify.onError())
-    .pipe(gulp.dest('dist/css'))
+    .pipe(gulp.dest('dist/css'));
 
   return styles;
 
-})
+});
 
-gulp.task('publish', function() {
+gulp.task('karma', function() {
+
+});
+
+gulp.task('publish-aws', function() {
 
   // create a new publisher
   var publisher = g.awspublish.create({
@@ -162,6 +166,6 @@ gulp.task('publish', function() {
 });
 
 
-gulp.task('deploy', ['dist', 'publish']);
+gulp.task('deploy', ['dist', 'publish-aws']);
 gulp.task('dist', ['scripts', 'styles', 'html', 'assets']);
 gulp.task('default', ['watch']);
